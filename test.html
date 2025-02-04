@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // concat , filter, map, slice, spread
+      console.log("spread");
+      const a = [1, 2, 3];
+      const b = [...a]; // spread
+      console.log("a ====> " + a);
+      console.log("b ====> " + b);
+
+      console.log("concat");
+      const a2 = [1, 2, 3];
+      const b2 = a2.concat(4);
+      console.log("a2 ====> " + a2);
+      console.log("b2 ====> " + b2);
+      const c2 = [0, ...a, 4];
+      console.log("c2 ====> " + c2);
+
+      console.log("filter");
+      const a3 = [1, 2, 3, 4, 5, 6];
+      const b3 = a3.filter((n) => {
+        return n % 2 == 0;
+      });
+      console.log("a3 ====> " + a3);
+      console.log("b3 ====> " + b3);
+
+      console.log("slice");
+      const a4 = [1, 2, 4, 5];
+      const b4 = a4.slice(0, 2);
+      console.log("a4 ====> " + a4);
+      console.log("b4 ====> " + b4);
+      const c4 = [...a4.slice(0, 2), 3, ...a4.slice(2, 4)];
+      console.log("c4 ====> " + c4);
+
+      console.log("map");
+      const a5 = [1, 2, 3, 4, 5];
+      console.log("a5 ====> " + a5);
+      const b5 = [];
+      a5.map((n) => {
+        console.log(n);
+        b5.push(n);
+      });
+      console.log("b5 ====> " + b5);
+      const c5 = a5.map((n) => n);
+      console.log("c5 ====> " + c5);
+    </script>
+  </body>
+</html>
