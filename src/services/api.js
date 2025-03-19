@@ -9,23 +9,38 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
+    console.log("Request URL:", config.url);
+    console.log("Request Headers:", config.headers);
     return config;
   },
   (error) => Promise.reject(error)
 );
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
       console.error("401 에러 발생:", error.response);
-      // localStorage.removeItem("token");
-      // window.location.href = "/"; // 주석 처리 또는 조건 추가
-      return Promise.reject(error); // 에러를 상위로 전달
+      // 토큰 갱신 API 호출 (예시)
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/refresh",
+          {
+            token: localStorage.getItem("token"),
+          }
+        );
+        const newToken = response.data.token;
+        localStorage.setItem("token", newToken);
+        error.config.headers.Authorization = `Bearer ${newToken}`;
+        return api(error.config); // 원래 요청 재시도
+      } catch (refreshError) {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
     }
     return Promise.reject(error);
   }
 );
-
 // 기존 퀴즈 플레이 관련 API
 export const startQuiz = () => api.post("/quiz/start");
 export const submitAnswer = (quizId, answer) =>
