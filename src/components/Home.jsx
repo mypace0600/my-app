@@ -16,8 +16,19 @@ const Home = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    navigate("/", { replace: true });
+  };
+
   return (
     <div className="home-container">
+      {/* 로그아웃 버튼 */}
+      <button onClick={handleLogout} className="logout-button">
+        Logout
+      </button>
+
       <h1>Wordle Home</h1>
       <button onClick={handleStartQuiz} className="action-button">
         Start Quiz

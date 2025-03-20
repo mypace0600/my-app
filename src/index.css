@@ -1,3 +1,4 @@
+/* 기본 스타일 */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -8,16 +9,20 @@ body {
   text-align: center;
 }
 
+/* 페이지 컨테이너 스타일 */
 .splash-container,
 .home-container,
 .quiz-container,
 .profile-container {
   padding: 20px;
+  position: relative; /* 로그아웃 버튼을 위한 위치 설정 */
 }
 
+/* 버튼 기본 스타일 */
 .login-button,
 .action-button,
-.submit-button {
+.submit-button,
+.logout-button {
   padding: 10px 20px;
   background-color: #4285f4; /* Google Blue */
   color: white;
@@ -25,24 +30,43 @@ body {
   border-radius: 5px;
   cursor: pointer;
   margin: 10px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
+/* 버튼 호버 스타일 */
 .login-button:hover,
 .action-button:hover,
-.submit-button:hover {
+.submit-button:hover,
+.logout-button:hover {
   background-color: #357abd;
 }
 
+/* 로그아웃 버튼 스타일 */
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #ff4d4d; /* Red for logout */
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
+}
+
+/* Wordle 스타일 */
 .word-length,
 .attempts {
   margin: 20px 0;
 }
 
+/* 그리드 스타일 */
 .row {
   display: flex;
   justify-content: center;
 }
 
+/* 타일 스타일 */
 .tile {
   width: 50px;
   height: 50px;
@@ -53,8 +77,10 @@ body {
   font-size: 20px;
   font-weight: bold;
   border: 2px solid #ccc;
+  text-transform: uppercase;
 }
 
+/* 타일 상태 */
 .tile.empty {
   background-color: white;
 }
@@ -74,14 +100,19 @@ body {
   color: white;
 }
 
+/* 입력 필드 */
 .guess-input {
   padding: 10px;
   font-size: 18px;
   text-transform: uppercase;
   width: 200px;
   margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
+/* 에러 메시지 */
 .error {
   color: red;
+  font-weight: bold;
 }
