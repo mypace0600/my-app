@@ -22,19 +22,25 @@ const Home = () => {
     navigate("/", { replace: true });
   };
 
+  const handleAdminQuiz = () => {
+    console.log("Home: Navigating to /admin/quiz");
+    navigate("/admin/quiz");
+  };
+
   return (
     <div className="home-container">
-      {/* 로그아웃 버튼 */}
       <button onClick={handleLogout} className="logout-button">
         Logout
       </button>
-
       <h1>Wordle Home</h1>
       <button onClick={handleStartQuiz} className="action-button">
         Start Quiz
       </button>
       <button onClick={() => navigate("/profile")} className="action-button">
         My Profile
+      </button>
+      <button onClick={handleAdminQuiz} className="action-button">
+        Admin Quiz
       </button>
     </div>
   );
