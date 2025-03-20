@@ -1,4 +1,3 @@
-// components/Callback.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +12,7 @@ const Callback = () => {
     if (token && email) {
       localStorage.setItem("token", token);
       localStorage.setItem("email", email);
-      navigate("/home", { replace: true }); // URL 정리
+      navigate("/home", { replace: true });
     } else {
       navigate("/", { replace: true });
     }
