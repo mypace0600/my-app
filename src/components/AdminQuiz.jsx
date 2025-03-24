@@ -23,7 +23,7 @@ function AdminQuiz() {
     setLoading(true);
     try {
       const data = await getQuizList(page);
-      setQuizzes(data.content || []);
+      setQuizzes(data || []);
     } catch (error) {
       console.error("❌ Error fetching quizzes:", error);
       if (error.response?.status === 401) {

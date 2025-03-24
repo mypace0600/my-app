@@ -53,9 +53,9 @@ const App = () => {
         <Route
           path="/admin/quiz"
           element={
-            <AdminRoute>
-              <AdminQuiz />
-            </AdminRoute>
+            // <AdminRoute>
+            <AdminQuiz />
+            // </AdminRoute>
           }
         />
         <Route path="/callback" element={<Callback />} />

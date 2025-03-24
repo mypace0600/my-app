@@ -47,10 +47,15 @@ export const submitAnswer = (quizId, answer) =>
   api.post("/quiz/submit", { quizId, answer });
 
 // Admin 퀴즈 관리 API
-export const getQuizList = (page = 0, size = 10) =>
-  api
-    .get("/admin/quiz/list", { params: { page, size } })
-    .then((res) => res.data);
+export const getQuizList = async (page = 0, size = 10) => {
+  console.log("Request URL: /admin/quiz/list");
+  console.log("Request Headers:", api.defaults.headers);
+  const response = await api.get("/admin/quiz/list", {
+    params: { page, size },
+  });
+  console.log("Response data:", response.data); // 응답 로그 추가
+  return response.data;
+};
 export const createQuiz = (quizData) =>
   api.post("/admin/quiz/create", quizData);
 export const updateQuiz = (id, quizData) =>
