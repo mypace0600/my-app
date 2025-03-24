@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuizDetails, submitAnswer } from "../services/api";
+import "../Quiz.css"; // CSS 추가
 
 const Quiz = () => {
   const { quizId } = useParams();
@@ -9,9 +10,10 @@ const Quiz = () => {
   const [attempts, setAttempts] = useState([]);
   const [error, setError] = useState(null);
   const [wordLength, setWordLength] = useState(6);
-  const [prevQuizId, setPrevQuizId] = useState(null);
   const [nextQuizId, setNextQuizId] = useState(null);
-  const maxAttempts = 4;
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [showRetryModal, setShowRetryModal] = useState(false);
+  const maxAttempts = 3;
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -19,7 +21,6 @@ const Quiz = () => {
         const response = await fetchQuizDetails(quizId);
         console.log("Quiz.jsx: fetchQuizDetails response:", response);
         setWordLength(response.wordLength);
-        setPrevQuizId(response.prevQuizId);
         setNextQuizId(response.nextQuizId);
       } catch (err) {
         console.error("Fetch quiz error:", err.response?.data || err);
@@ -42,13 +43,22 @@ const Quiz = () => {
       setAttempts([...attempts, response]);
       setGuess("");
       setError(null);
-      if (attempts.length + 1 === maxAttempts && !response.correct) {
-        setTimeout(() => navigate("/home"), 2000); // 실패 후 2초 대기
+
+      if (response.correct) {
+        setShowResultModal(true);
+      } else if (attempts.length + 1 === maxAttempts) {
+        setShowRetryModal(true);
       }
     } catch (err) {
       console.error("Submit error:", err.response?.data || err);
       setError(err.response?.data?.error || "Failed to submit");
     }
+  };
+
+  const handleRetry = () => {
+    setAttempts([]); // 시도 횟수 초기화
+    setShowRetryModal(false);
+    // Redis 시도 횟수 초기화는 서버에서 별도로 처리 필요 (API 추가 가능)
   };
 
   const renderWordLength = () =>
@@ -72,15 +82,14 @@ const Quiz = () => {
       </div>
     ));
 
-  const isGameOver =
-    attempts.length >= maxAttempts || attempts.some((a) => a.correct);
+  const isGameOver = attempts.some((a) => a.correct);
 
   return (
     <div className="quiz-container">
       <h1>Wordle Quiz</h1>
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
-      {!isGameOver ? (
+      {!isGameOver && attempts.length < maxAttempts && (
         <form onSubmit={handleSubmit} className="input-section">
           <input
             type="text"
@@ -95,28 +104,44 @@ const Quiz = () => {
             Submit
           </button>
         </form>
-      ) : (
-        <div className="navigation-buttons">
-          <button
-            onClick={() => navigate(`/quiz/${prevQuizId}`)}
-            disabled={!prevQuizId}
-            className="nav-button"
-          >
-            이전 문제 풀기
-          </button>
-          <button onClick={() => navigate("/home")} className="nav-button">
-            홈
-          </button>
-          <button
-            onClick={() => navigate(`/quiz/${nextQuizId}`)}
-            disabled={!nextQuizId}
-            className="nav-button"
-          >
-            다음 문제 풀기
-          </button>
-        </div>
       )}
       {error && <p className="error">{error}</p>}
+
+      {/* 결과 모달 */}
+      {showResultModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>You Won!</h2>
+            <div className="modal-buttons">
+              <button
+                onClick={() => navigate("/home")}
+                className="modal-button"
+              >
+                홈
+              </button>
+              <button
+                onClick={() => navigate(`/quiz/${nextQuizId || quizId}`)}
+                className="modal-button"
+              >
+                다음 문제 풀기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 재시도 모달 */}
+      {showRetryModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>시도 횟수 초과</h2>
+            <p>시도 횟수가 초과되었습니다.</p>
+            <button onClick={handleRetry} className="modal-button">
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
