@@ -7,8 +7,9 @@ const Home = () => {
   const handleStartQuiz = async () => {
     try {
       const response = await startQuiz();
-      navigate(`/quiz/${response.data.quizId}`);
+      navigate(`/quiz/${response.quizId}`);
     } catch (err) {
+      console.error("Start quiz error:", err.response?.data || err);
       alert(
         "Failed to start quiz: " +
           (err.response?.data?.error || "Unknown error")

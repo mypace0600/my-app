@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { submitAnswer } from "../services/api";
+import { fetchQuizDetails, submitAnswer } from "../services/api";
 
 const Quiz = () => {
   const { quizId } = useParams();
@@ -8,21 +8,26 @@ const Quiz = () => {
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState([]);
   const [error, setError] = useState(null);
-  const [wordLength, setWordLength] = useState(6); // POTATO 기준
+  const [wordLength, setWordLength] = useState(6);
+  const [prevQuizId, setPrevQuizId] = useState(null);
+  const [nextQuizId, setNextQuizId] = useState(null);
   const maxAttempts = 4;
 
-  // 퀴즈 시작 시 wordLength 설정 (API에서 받아왔다 가정)
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await startQuiz(); // 퀴즈 재호출로 길이 확인
-        setWordLength(response.data.wordLength);
+        const response = await fetchQuizDetails(quizId);
+        console.log("Quiz.jsx: fetchQuizDetails response:", response);
+        setWordLength(response.wordLength);
+        setPrevQuizId(response.prevQuizId);
+        setNextQuizId(response.nextQuizId);
       } catch (err) {
+        console.error("Fetch quiz error:", err.response?.data || err);
         setError("Failed to load quiz");
       }
     };
     fetchQuizData();
-  }, []);
+  }, [quizId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,17 +38,15 @@ const Quiz = () => {
 
     try {
       const response = await submitAnswer(quizId, guess);
-      setAttempts([...attempts, response.data]);
+      console.log("Quiz.jsx: submitAnswer response:", response);
+      setAttempts([...attempts, response]);
       setGuess("");
       setError(null);
-      if (response.data.correct) {
-        alert("You won!");
-        navigate("/home");
-      } else if (attempts.length + 1 === maxAttempts) {
-        alert("Game over!");
-        navigate("/home");
+      if (attempts.length + 1 === maxAttempts && !response.correct) {
+        setTimeout(() => navigate("/home"), 2000); // 실패 후 2초 대기
       }
     } catch (err) {
+      console.error("Submit error:", err.response?.data || err);
       setError(err.response?.data?.error || "Failed to submit");
     }
   };
@@ -60,20 +63,24 @@ const Quiz = () => {
   const renderAttempts = () =>
     attempts.map((attempt, rowIdx) => (
       <div key={rowIdx} className="row">
-        {attempt.feedback.map((fr, colIdx) => (
-          <div key={colIdx} className={`tile ${fr.status}`}>
-            {fr.letter}
-          </div>
-        ))}
+        {attempt.feedback &&
+          attempt.feedback.map((fr, colIdx) => (
+            <div key={colIdx} className={`tile ${fr.status}`}>
+              {fr.letter}
+            </div>
+          ))}
       </div>
     ));
+
+  const isGameOver =
+    attempts.length >= maxAttempts || attempts.some((a) => a.correct);
 
   return (
     <div className="quiz-container">
       <h1>Wordle Quiz</h1>
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
-      {attempts.length < maxAttempts && !attempts.some((a) => a.correct) && (
+      {!isGameOver ? (
         <form onSubmit={handleSubmit} className="input-section">
           <input
             type="text"
@@ -88,6 +95,26 @@ const Quiz = () => {
             Submit
           </button>
         </form>
+      ) : (
+        <div className="navigation-buttons">
+          <button
+            onClick={() => navigate(`/quiz/${prevQuizId}`)}
+            disabled={!prevQuizId}
+            className="nav-button"
+          >
+            이전 문제 풀기
+          </button>
+          <button onClick={() => navigate("/home")} className="nav-button">
+            홈
+          </button>
+          <button
+            onClick={() => navigate(`/quiz/${nextQuizId}`)}
+            disabled={!nextQuizId}
+            className="nav-button"
+          >
+            다음 문제 풀기
+          </button>
+        </div>
       )}
       {error && <p className="error">{error}</p>}
     </div>
