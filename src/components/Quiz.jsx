@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchQuizDetails, submitAnswer } from "../services/api";
+import { fetchQuizDetails, submitAnswer, resetAttempts } from "../services/api";
 import "../Quiz.css"; // CSS 추가
 
 const Quiz = () => {
@@ -55,10 +55,10 @@ const Quiz = () => {
     }
   };
 
-  const handleRetry = () => {
-    setAttempts([]); // 시도 횟수 초기화
+  const handleRetry = async () => {
+    await resetAttempts(quizId);
+    setAttempts([]);
     setShowRetryModal(false);
-    // Redis 시도 횟수 초기화는 서버에서 별도로 처리 필요 (API 추가 가능)
   };
 
   const renderWordLength = () =>

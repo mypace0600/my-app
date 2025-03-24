@@ -72,4 +72,8 @@ export const updateQuiz = (id, quizData) =>
   api.put(`/admin/quiz/update/${id}`, quizData);
 export const deleteQuiz = (id) => api.delete(`/admin/quiz/delete/${id}`);
 
+export const resetAttempts = async (quizId) => {
+  await api.post(`/quiz/reset/${quizId}`);
+};
+
 export default api;
