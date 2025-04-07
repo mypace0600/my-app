@@ -13,17 +13,7 @@ import Index from "./components/Index";
 import AdminRoute from "./components/AdminRoute";
 import { getCookie } from "./utils/cookieUtil";
 import "./index.css";
-
-const ProtectedRoute = ({ children }) => {
-  const token = getCookie("token");
-  console.log("ProtectedRoute: Token check:", token ? "exists" : "null");
-
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
-};
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const location = useLocation();
@@ -34,14 +24,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/splash" element={<Splash />} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/home" element={<Home />} />
         <Route
           path="/quiz/:quizId"
           element={
