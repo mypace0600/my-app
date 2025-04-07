@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { startQuiz } from "../services/api";
+import { deleteCookie } from "../utils/cookieUtil";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,13 +19,12 @@ const Home = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    deleteCookie("token");
+    deleteCookie("email");
     navigate("/", { replace: true });
   };
 
   const handleAdminQuiz = () => {
-    console.log("Home: Navigating to /admin/quiz");
     navigate("/admin/quiz");
   };
 

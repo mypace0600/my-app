@@ -9,13 +9,13 @@ import Splash from "./components/Splash";
 import Home from "./components/Home";
 import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
-import Callback from "./components/Callback";
 import Index from "./components/Index";
 import AdminRoute from "./components/AdminRoute";
+import { getCookie } from "./utils/cookieUtil";
 import "./index.css";
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = getCookie("token");
   console.log("ProtectedRoute: Token check:", token ? "exists" : "null");
 
   if (!token) {
@@ -53,13 +53,12 @@ const App = () => {
         <Route
           path="/admin/quiz"
           element={
-            // <AdminRoute>
-            <AdminQuiz />
-            // </AdminRoute>
+            <AdminRoute>
+              <AdminQuiz />
+            </AdminRoute>
           }
         />
-        <Route path="/callback" element={<Callback />} />
-        <Route path="*" element={<div>404 Not Found</div>} /> {/* 추가 */}
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>
   );

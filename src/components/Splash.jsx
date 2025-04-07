@@ -1,6 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 const Splash = () => {
+  const navigate = useNavigate();
+
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    const googleAuthUrl = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = googleAuthUrl;
   };
 
   return (

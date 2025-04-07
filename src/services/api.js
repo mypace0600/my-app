@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCookie, setCookie, deleteCookie } from "../utils/cookieUtil";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -7,7 +8,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     console.log("Request URL:", config.url);
     console.log("Request Headers:", config.headers);
@@ -22,16 +23,19 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error("401 에러 발생:", error.response);
       try {
+        const oldToken = getCookie("token");
         const response = await axios.post(
           "http://localhost:8080/api/auth/refresh",
-          { token: localStorage.getItem("token") }
+          {
+            token: oldToken,
+          }
         );
         const newToken = response.data.token;
-        localStorage.setItem("token", newToken);
+        setCookie("token", newToken);
         error.config.headers.Authorization = `Bearer ${newToken}`;
         return api(error.config);
       } catch (refreshError) {
-        localStorage.removeItem("token");
+        deleteCookie("token");
         window.location.href = "/";
       }
     }
@@ -41,28 +45,23 @@ api.interceptors.response.use(
 
 export const startQuiz = async () => {
   const response = await api.post("/quiz/start");
-  console.log("startQuiz response:", response.data);
   return response.data;
 };
 
 export const fetchQuizDetails = async (quizId) => {
   const response = await api.get(`/quiz/${quizId}`);
-  console.log("fetchQuizDetails response:", response.data);
   return response.data;
 };
 
 export const submitAnswer = async (quizId, answer) => {
   const response = await api.post("/quiz/submit", { quizId, answer });
-  console.log("submitAnswer response:", response.data); // 응답 로그 추가
-  return response.data; // response.data 반환
+  return response.data;
 };
 
-// Admin 퀴즈 관리 API
 export const getQuizList = async (page = 0, size = 10) => {
   const response = await api.get("/admin/quiz/list", {
     params: { page, size },
   });
-  console.log("Response data:", response.data);
   return response.data;
 };
 
@@ -71,7 +70,6 @@ export const createQuiz = (quizData) =>
 export const updateQuiz = (id, quizData) =>
   api.put(`/admin/quiz/update/${id}`, quizData);
 export const deleteQuiz = (id) => api.delete(`/admin/quiz/delete/${id}`);
-
 export const resetAttempts = async (quizId) => {
   await api.post(`/quiz/reset/${quizId}`);
 };
