@@ -11,7 +11,6 @@ import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
 import Index from "./components/Index";
 import AdminRoute from "./components/AdminRoute";
-import { getCookie } from "./utils/cookieUtil";
 import "./index.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 

@@ -1,53 +1,44 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { getCookie } from "../utils/cookieUtil";
 
 const AdminRoute = ({ children }) => {
-  console.log("AdminRoute: Component mounted");
-
-  const [isAdmin, setIsAdmin] = useState(null);
-  const token = getCookie("token");
-  console.log("AdminRoute: Token:", token ? "exists" : "null");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    console.log("AdminRoute: useEffect triggered");
-    const checkAdminStatus = async () => {
-      if (!token) {
-        console.log("AdminRoute: No token found");
-        setIsAdmin(false);
-        return;
-      }
-
+    const checkAdmin = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/user", {
+        const response = await fetch("http://localhost:8080/api/auth/check", {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          credentials: "include", // 쿠키 자동 포함
         });
-        console.log("AdminRoute: Response status:", res.status);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+
+        if (response.ok) {
+          console.log("✅ AdminRoute: 관리자 인증 성공");
+          setIsAdmin(true);
+        } else {
+          console.warn(
+            "⛔ AdminRoute: 인증 실패 - 응답 코드:",
+            response.status
+          );
+          setIsAdmin(false);
         }
-        const data = await res.json();
-        setIsAdmin(data.isAdmin);
       } catch (error) {
-        console.error("AdminRoute: Failed to fetch user info:", error);
+        console.error("⛔ AdminRoute: 인증 체크 에러", error);
         setIsAdmin(false);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    checkAdminStatus();
-  }, [token]);
+    checkAdmin();
+  }, []);
 
-  if (isAdmin === null) return <div>Loading...</div>;
-
-  if (!token || !isAdmin) {
-    return <Navigate to="/" replace />;
+  if (isLoading) {
+    return <div>관리자 권한 확인 중...</div>; // or a spinner
   }
 
-  return children;
+  return isAdmin ? children : <Navigate to="/" replace />;
 };
 
 export default AdminRoute;

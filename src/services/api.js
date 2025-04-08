@@ -4,12 +4,11 @@ import { getCookie, setCookie, deleteCookie } from "../utils/cookieUtil";
 const api = axios.create({
   baseURL: "http://localhost:8080/api",
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // 이거 추가!! ← 핵심
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = getCookie("token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
     console.log("Request URL:", config.url);
     console.log("Request Headers:", config.headers);
     return config;
@@ -22,22 +21,6 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       console.error("401 에러 발생:", error.response);
-      try {
-        const oldToken = getCookie("token");
-        const response = await axios.post(
-          "http://localhost:8080/api/auth/refresh",
-          {
-            token: oldToken,
-          }
-        );
-        const newToken = response.data.token;
-        setCookie("token", newToken);
-        error.config.headers.Authorization = `Bearer ${newToken}`;
-        return api(error.config);
-      } catch (refreshError) {
-        deleteCookie("token");
-        window.location.href = "/";
-      }
     }
     return Promise.reject(error);
   }
