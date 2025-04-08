@@ -9,6 +9,8 @@ import "../AdminQuiz.css";
 import { useNavigate } from "react-router-dom";
 
 function AdminQuiz() {
+  // 상단 상태 정의 부분에 추가
+
   const navigate = useNavigate();
   const [quizzes, setQuizzes] = useState([]);
   const [page, setPage] = useState(0);
@@ -23,18 +25,21 @@ function AdminQuiz() {
     fetchQuizzes(page, searchKeyword);
   }, [page]);
 
-  const fetchQuizzes = async (page = 0, keyword = "") => {
+  const fetchQuizzes = async (pageToLoad = page, keyword = searchKeyword) => {
     setLoading(true);
     try {
-      const { content, totalPages } = await getQuizList(page, 5, keyword);
+      const { content, totalPages } = await getQuizList(pageToLoad, 5, keyword);
       setQuizzes(content || []);
       setTotalPages(totalPages || 0);
     } catch (error) {
       console.error("❌ Error fetching quizzes:", error);
-      alert("퀴즈 목록을 불러오는 데 실패했습니다.");
-    } finally {
-      setLoading(false);
+      if (error.response?.status === 401) {
+        alert("관리자 권한이 필요합니다. 로그인 상태를 확인하세요.");
+      } else {
+        alert("퀴즈 목록을 불러오는 데 실패했습니다.");
+      }
     }
+    setLoading(false);
   };
 
   const handleSearch = () => {
@@ -104,8 +109,13 @@ function AdminQuiz() {
           onChange={(e) => setSearchKeyword(e.target.value)}
           placeholder="퀴즈 제목을 검색해보세요"
         />
-        <button className="btn btn-primary" onClick={handleSearch}>
-          검색하기
+        <button
+          onClick={() => {
+            setPage(0);
+            fetchQuizzes(0, searchKeyword);
+          }}
+        >
+          검색
         </button>
       </div>
 
@@ -182,7 +192,11 @@ function AdminQuiz() {
           ))}
         </div>
       ) : (
-        <p className="no-quizzes">등록된 퀴즈가 없습니다.</p>
+        <p className="no-quizzes">
+          {searchKeyword
+            ? "검색 결과가 없습니다."
+            : "등록된 퀴즈가 없습니다. 새 퀴즈를 생성해보세요!"}
+        </p>
       )}
 
       <div className="pagination">
