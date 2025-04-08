@@ -8,19 +8,19 @@ const AdminRoute = ({ children }) => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/auth/check", {
-          method: "GET",
-          credentials: "include", // 쿠키 자동 포함
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/auth/admin-check",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (response.ok) {
           console.log("✅ AdminRoute: 관리자 인증 성공");
           setIsAdmin(true);
         } else {
-          console.warn(
-            "⛔ AdminRoute: 인증 실패 - 응답 코드:",
-            response.status
-          );
+          console.warn("⛔ AdminRoute: 관리자 아님 또는 인증 실패");
           setIsAdmin(false);
         }
       } catch (error) {

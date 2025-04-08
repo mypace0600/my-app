@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { startQuiz } from "../services/api";
 import { deleteCookie } from "../utils/cookieUtil";
@@ -5,6 +6,32 @@ import LogoutButton from "./LogOutButton";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/auth/admin-check",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (response.ok) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        console.error("Admin check failed:", error);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdmin();
+  }, []);
 
   const handleStartQuiz = async () => {
     try {
@@ -25,10 +52,6 @@ const Home = () => {
     navigate("/", { replace: true });
   };
 
-  const handleAdminQuiz = () => {
-    navigate("/admin/quiz");
-  };
-
   return (
     <div className="home-container">
       <LogoutButton />
@@ -39,9 +62,14 @@ const Home = () => {
       <button onClick={() => navigate("/profile")} className="action-button">
         My Profile
       </button>
-      <button onClick={handleAdminQuiz} className="action-button">
-        Admin Quiz
-      </button>
+      {isAdmin && (
+        <button
+          onClick={() => navigate("/admin/quiz")}
+          className="action-button"
+        >
+          Admin
+        </button>
+      )}
     </div>
   );
 };
