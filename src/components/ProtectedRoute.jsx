@@ -8,10 +8,11 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/user/auth_check", {
+        const res = await fetch("http://localhost:8080/api/auth/check", {
           method: "GET",
           credentials: "include", // 중요! 쿠키 전송
         });
+        console.log(res);
 
         if (res.ok) {
           setIsAuthorized(true);
@@ -34,7 +35,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthorized) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/splash" replace />;
   }
 
   return children;

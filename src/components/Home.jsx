@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { startQuiz } from "../services/api";
 import { deleteCookie } from "../utils/cookieUtil";
+import LogoutButton from "./LogOutButton";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -30,9 +31,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <button onClick={handleLogout} className="logout-button">
-        Logout
-      </button>
+      <LogoutButton />
       <h1>Wordle Home</h1>
       <button onClick={handleStartQuiz} className="action-button">
         Start Quiz

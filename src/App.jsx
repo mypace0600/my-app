@@ -22,17 +22,19 @@ const App = () => {
   return (
     <div className="app">
       <Routes>
+        {/* ✅ 정확히 루트일 때만 Index */}
         <Route path="/" element={<Index />} />
         <Route path="/splash" element={<Splash />} />
-        <Route path="/home" element={<Home />} />
         <Route
-          path="/quiz/:quizId"
+          path="/home"
           element={
             <ProtectedRoute>
-              <Quiz />
+              <Home />
             </ProtectedRoute>
           }
         />
+        <Route path="/quiz/:quizId" element={<Quiz />} />
+
         <Route
           path="/admin/quiz"
           element={
@@ -41,6 +43,7 @@ const App = () => {
             </AdminRoute>
           }
         />
+
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>
