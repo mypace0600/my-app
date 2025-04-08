@@ -10,35 +10,36 @@ import { useNavigate } from "react-router-dom";
 
 function AdminQuiz() {
   const navigate = useNavigate();
-  const [totalPages, setTotalPages] = useState(0);
   const [quizzes, setQuizzes] = useState([]);
   const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState(null);
   const [formData, setFormData] = useState({ answer: "", hint: "" });
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    fetchQuizzes();
+    fetchQuizzes(page, searchKeyword);
   }, [page]);
 
-  const fetchQuizzes = async () => {
+  const fetchQuizzes = async (page = 0, keyword = "") => {
     setLoading(true);
     try {
-      console.log(await getQuizList(page));
-      const { content, totalPages } = await getQuizList(page);
-      console.log(content);
+      const { content, totalPages } = await getQuizList(page, 5, keyword);
       setQuizzes(content || []);
       setTotalPages(totalPages || 0);
     } catch (error) {
       console.error("❌ Error fetching quizzes:", error);
-      if (error.response?.status === 401) {
-        alert("관리자 권한이 필요합니다. 로그인 상태를 확인하세요.");
-      } else {
-        alert("퀴즈 목록을 불러오는 데 실패했습니다.");
-      }
+      alert("퀴즈 목록을 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const handleSearch = () => {
+    setPage(0);
+    fetchQuizzes(0, searchKeyword);
   };
 
   const handleSubmit = async (e) => {
@@ -54,14 +55,10 @@ function AdminQuiz() {
         await createQuiz(formData);
       }
       resetForm();
-      fetchQuizzes();
+      fetchQuizzes(page, searchKeyword);
     } catch (error) {
-      console.error("Error submitting quiz:", error);
-      if (error.response?.status === 409) {
-        alert("이미 등록된 퀴즈입니다."); // 중복 에러 처리
-      } else {
-        alert("퀴즈 저장에 실패했습니다.");
-      }
+      console.error("❌ Error submitting quiz:", error);
+      alert("퀴즈 저장에 실패했습니다.");
     }
   };
 
@@ -69,9 +66,9 @@ function AdminQuiz() {
     if (window.confirm("정말 이 퀴즈를 삭제하시겠습니까?")) {
       try {
         await deleteQuiz(id);
-        fetchQuizzes();
+        fetchQuizzes(page, searchKeyword);
       } catch (error) {
-        console.error("Error deleting quiz:", error);
+        console.error("❌ Error deleting quiz:", error);
         alert("퀴즈 삭제에 실패했습니다.");
       }
     }
@@ -79,8 +76,8 @@ function AdminQuiz() {
 
   const resetForm = () => {
     setFormData({ answer: "", hint: "" });
-    setShowForm(false);
     setEditingQuiz(null);
+    setShowForm(false);
   };
 
   return (
@@ -90,8 +87,8 @@ function AdminQuiz() {
           <button className="btn btn-home" onClick={() => navigate("/home")}>
             Home
           </button>
-          <h1>Wordle Quiz Management</h1>
         </div>
+        <h1>Wordle Quiz Management</h1>
         <button
           className="btn btn-primary"
           onClick={() => setShowForm(!showForm)}
@@ -99,6 +96,18 @@ function AdminQuiz() {
           {showForm ? "취소" : "새 퀴즈 생성"}
         </button>
       </header>
+
+      <div className="search-bar">
+        <input
+          type="text"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          placeholder="퀴즈 제목을 검색해보세요"
+        />
+        <button className="btn btn-primary" onClick={handleSearch}>
+          검색하기
+        </button>
+      </div>
 
       {showForm && (
         <form className="quiz-form" onSubmit={handleSubmit}>
@@ -111,8 +120,8 @@ function AdminQuiz() {
                 setFormData({ ...formData, answer: e.target.value })
               }
               required
-              placeholder="정답 단어를 입력하세요 (최대 10글자)"
               maxLength={10}
+              placeholder="정답 단어를 입력하세요 (최대 10글자)"
             />
           </div>
           <div className="form-group">
@@ -173,9 +182,7 @@ function AdminQuiz() {
           ))}
         </div>
       ) : (
-        <p className="no-quizzes">
-          등록된 퀴즈가 없습니다. 새 퀴즈를 생성해보세요!
-        </p>
+        <p className="no-quizzes">등록된 퀴즈가 없습니다.</p>
       )}
 
       <div className="pagination">
@@ -189,9 +196,9 @@ function AdminQuiz() {
 
         {Array.from({ length: totalPages }, (_, i) => i)
           .filter((p) => {
-            if (totalPages <= 5) return true; // 페이지가 5개 이하일 땐 전부 표시
-            if (p === 0 || p === totalPages - 1) return true; // 처음과 끝
-            if (Math.abs(p - page) <= 2) return true; // 현재 페이지 주변만
+            if (totalPages <= 5) return true;
+            if (p === 0 || p === totalPages - 1) return true;
+            if (Math.abs(p - page) <= 2) return true;
             return false;
           })
           .map((p, i, arr) => {
