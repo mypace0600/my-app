@@ -172,3 +172,49 @@
   font-size: 16px;
   color: #333;
 }
+
+.btn-pagination-number {
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.2s, color 0.2s;
+}
+
+.btn-pagination-number:hover {
+  color: #007bff;
+}
+
+.btn-pagination-number.active {
+  font-weight: bold;
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.dots {
+  color: #999;
+  font-size: 16px;
+  margin: 0 4px;
+  user-select: none;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-home {
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.btn-home:hover {
+  background-color: #e2e6ea;
+}

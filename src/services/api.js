@@ -41,10 +41,8 @@ export const submitAnswer = async (quizId, answer) => {
   return response.data;
 };
 
-export const getQuizList = async (page = 0, size = 10) => {
-  const response = await api.get("/admin/quiz/list", {
-    params: { page, size },
-  });
+export const getQuizList = async (page = 0, size = 5) => {
+  const response = await api.get(`/admin/quiz/list?page=${page}&size=${size}`);
   return response.data;
 };
 

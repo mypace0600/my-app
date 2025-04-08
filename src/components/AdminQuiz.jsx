@@ -6,8 +6,11 @@ import {
   deleteQuiz,
 } from "../services/api";
 import "../AdminQuiz.css";
+import { useNavigate } from "react-router-dom";
 
 function AdminQuiz() {
+  const navigate = useNavigate();
+  const [totalPages, setTotalPages] = useState(0);
   const [quizzes, setQuizzes] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -22,8 +25,11 @@ function AdminQuiz() {
   const fetchQuizzes = async () => {
     setLoading(true);
     try {
-      const data = await getQuizList(page);
-      setQuizzes(data || []);
+      console.log(await getQuizList(page));
+      const { content, totalPages } = await getQuizList(page);
+      console.log(content);
+      setQuizzes(content || []);
+      setTotalPages(totalPages || 0);
     } catch (error) {
       console.error("❌ Error fetching quizzes:", error);
       if (error.response?.status === 401) {
@@ -80,7 +86,12 @@ function AdminQuiz() {
   return (
     <div className="quiz-container">
       <header className="quiz-header">
-        <h1>Wordle Quiz Management</h1>
+        <div className="header-left">
+          <button className="btn btn-home" onClick={() => navigate("/home")}>
+            Home
+          </button>
+          <h1>Wordle Quiz Management</h1>
+        </div>
         <button
           className="btn btn-primary"
           onClick={() => setShowForm(!showForm)}
@@ -170,15 +181,41 @@ function AdminQuiz() {
       <div className="pagination">
         <button
           className="btn btn-pagination"
-          onClick={() => setPage(page - 1)}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
           disabled={page === 0}
         >
           이전
         </button>
-        <span>페이지 {page + 1}</span>
+
+        {Array.from({ length: totalPages }, (_, i) => i)
+          .filter((p) => {
+            if (totalPages <= 5) return true; // 페이지가 5개 이하일 땐 전부 표시
+            if (p === 0 || p === totalPages - 1) return true; // 처음과 끝
+            if (Math.abs(p - page) <= 2) return true; // 현재 페이지 주변만
+            return false;
+          })
+          .map((p, i, arr) => {
+            const prev = arr[i - 1];
+            const showDots = i > 0 && p - prev > 1;
+            return (
+              <span key={p}>
+                {showDots && <span className="dots">...</span>}
+                <button
+                  className={`btn btn-pagination-number ${
+                    p === page ? "active" : ""
+                  }`}
+                  onClick={() => setPage(p)}
+                >
+                  {p + 1}
+                </button>
+              </span>
+            );
+          })}
+
         <button
           className="btn btn-pagination"
-          onClick={() => setPage(page + 1)}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+          disabled={page === totalPages - 1}
         >
           다음
         </button>
