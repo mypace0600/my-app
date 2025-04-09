@@ -1,3 +1,5 @@
+// utils/cookieUtil.jsx
+
 export const getCookie = (name) => {
   const cookies = document.cookie.split("; ");
   for (let cookie of cookies) {

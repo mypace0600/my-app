@@ -1,3 +1,5 @@
+// /components/AdminQuiz.jsx
+
 import { useState, useEffect } from "react";
 import {
   getQuizList,

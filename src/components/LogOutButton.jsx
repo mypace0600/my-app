@@ -1,3 +1,5 @@
+// /components/LogOutButton.jsx
+
 import { useNavigate } from "react-router-dom";
 import { deleteCookie } from "../utils/cookieUtil";
 

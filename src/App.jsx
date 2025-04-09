@@ -1,18 +1,20 @@
+// /App.jsx
+
 import {
-  Navigate,
   BrowserRouter as Router,
   Route,
   Routes,
   useLocation,
 } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Splash from "./components/Splash";
 import Home from "./components/Home";
 import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
 import Index from "./components/Index";
-import AdminRoute from "./components/AdminRoute";
+import AdminRoute from "./routes/AdminRoute";
 import "./index.css";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
   const location = useLocation();

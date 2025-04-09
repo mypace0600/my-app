@@ -1,3 +1,5 @@
+// /components/Home.jsx
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { startQuiz } from "../services/api";
