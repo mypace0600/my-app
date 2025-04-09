@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { deleteCookie } from "../utils/cookieUtil";
+import { fetchCurrentUser } from "../services/authApi";
 
 const AuthContext = createContext();
 
@@ -10,23 +12,37 @@ export const AuthProvider = ({ children }) => {
   const [fetched, setFetched] = useState(false);
 
   const fetchUser = async () => {
-    try {
-      const res = await axios.get("/api/auth/me", { withCredentials: true });
-      setUser(res.data);
-    } catch (error) {
+    const data = await fetchCurrentUser();
+    if (data) {
+      setUser(data);
+    } else {
       setUser(null);
+    }
+    setFetched(true);
+  };
+
+  const logout = async () => {
+    try {
+      await axios.post(
+        "/api/auth/custom-logout",
+        {},
+        { withCredentials: true }
+      );
+    } catch (err) {
+      console.error("Logout API error:", err);
     } finally {
-      setFetched(true);
+      deleteCookie("token");
+      deleteCookie("email");
+      setUser(null);
     }
   };
 
   useEffect(() => {
-    // 앱 시작 시 자동 호출
     fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, fetched }}>
+    <AuthContext.Provider value={{ user, setUser, fetched, logout }}>
       {children}
     </AuthContext.Provider>
   );

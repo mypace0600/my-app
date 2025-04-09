@@ -20,7 +20,9 @@ function Index() {
 
     const checkLogin = async () => {
       try {
-        await axios.get("/api/auth/check", { withCredentials: true });
+        await axios.get("/api/auth/check", {
+          withCredentials: true,
+        });
         console.log("✅ 로그인 상태, /home으로 이동");
         navigate("/home", { replace: true });
       } catch (error) {
