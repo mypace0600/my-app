@@ -1,39 +1,22 @@
-// /components/Home.jsx
+// src/components/Home.jsx
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { startQuiz } from "../services/api";
 import { deleteCookie } from "../utils/cookieUtil";
 import LogoutButton from "./LogOutButton";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { user, fetched } = useAuth();
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/auth/admin-check",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (response.ok) {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-      } catch (error) {
-        console.error("Admin check failed:", error);
-        setIsAdmin(false);
-      }
-    };
-
-    checkAdmin();
-  }, []);
+    // fetched가 끝났고 user가 null이면 splash로 보냄
+    if (fetched && !user) {
+      navigate("/splash", { replace: true });
+    }
+  }, [fetched, user, navigate]);
 
   const handleStartQuiz = async () => {
     try {
@@ -41,18 +24,16 @@ const Home = () => {
       navigate(`/quiz/${response.quizId}`);
     } catch (err) {
       console.error("Start quiz error:", err.response?.data || err);
-      alert(
-        "Failed to start quiz: " +
-          (err.response?.data?.error || "Unknown error")
-      );
+      alert("퀴즈 시작 실패");
     }
   };
 
   const handleLogout = () => {
     deleteCookie("token");
-    deleteCookie("email");
     navigate("/", { replace: true });
   };
+
+  if (!fetched) return <div>로딩 중...</div>;
 
   return (
     <div className="home-container">
@@ -64,7 +45,7 @@ const Home = () => {
       <button onClick={() => navigate("/profile")} className="action-button">
         My Profile
       </button>
-      {isAdmin && (
+      {user?.isAdmin && (
         <button
           onClick={() => navigate("/admin/quiz")}
           className="action-button"

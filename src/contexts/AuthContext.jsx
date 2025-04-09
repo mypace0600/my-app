@@ -7,21 +7,26 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [fetched, setFetched] = useState(false); // ✅ 최초 호출 여부 판단
+  const [fetched, setFetched] = useState(false);
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("/api/auth/me");
-      setUser(res.data); // ✅ email, isAdmin 등 저장
+      const res = await axios.get("/api/auth/me", { withCredentials: true });
+      setUser(res.data);
     } catch (error) {
-      setUser(null); // 로그인 안된 상태
+      setUser(null);
     } finally {
       setFetched(true);
     }
   };
 
+  useEffect(() => {
+    // 앱 시작 시 자동 호출
+    fetchUser();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, setUser, fetchUser, fetched }}>
+    <AuthContext.Provider value={{ user, setUser, fetched }}>
       {children}
     </AuthContext.Provider>
   );

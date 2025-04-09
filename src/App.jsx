@@ -1,4 +1,4 @@
-// /App.jsx
+// src/App.jsx
 
 import {
   BrowserRouter as Router,
@@ -53,7 +53,9 @@ const App = () => {
 
 const AppWrapper = () => (
   <Router>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </Router>
 );
 
