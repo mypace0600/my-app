@@ -7,7 +7,8 @@ import {
   updateQuiz,
   deleteQuiz,
 } from "../services/api";
-import "../css/AdminQuiz.css";
+import "../css/base.css"; // 공통
+import "../css/adminQuiz.css";
 import CustomHeader from "./CustomHeader";
 
 function AdminQuiz() {

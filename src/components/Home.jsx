@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { startQuiz } from "../services/api";
 import CustomHeader from "./CustomHeader";
+import "../css/base.css"; // 공통
+import "../css/home.css";
 
 const Home = () => {
   const navigate = useNavigate();
