@@ -30,17 +30,17 @@ api.interceptors.response.use(
 
 export const startQuiz = async () => {
   const response = await api.post("/quiz/start");
-  return response.data;
+  return response.data.data;
 };
 
 export const fetchQuizDetails = async (quizId) => {
   const response = await api.get(`/quiz/${quizId}`);
-  return response.data;
+  return response.data.data;
 };
 
 export const submitAnswer = async (quizId, answer) => {
   const response = await api.post("/quiz/submit", { quizId, answer });
-  return response.data;
+  return response.data.data;
 };
 
 export const getQuizList = async (page = 0, size = 5, keyword = "") => {

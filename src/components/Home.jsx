@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { startQuiz } from "../services/api";
-import { deleteCookie } from "../utils/cookieUtil";
 import LogoutButton from "./LogOutButton";
 
 const Home = () => {
@@ -20,16 +19,12 @@ const Home = () => {
   const handleStartQuiz = async () => {
     try {
       const response = await startQuiz();
+      console.log(response);
       navigate(`/quiz/${response.quizId}`);
     } catch (err) {
       console.error("Start quiz error:", err.response?.data || err);
       alert("퀴즈 시작 실패");
     }
-  };
-
-  const handleLogout = () => {
-    deleteCookie("token");
-    navigate("/", { replace: true });
   };
 
   if (!fetched) return <div>로딩 중...</div>;
