@@ -1,0 +1,125 @@
+/* /css/base.css */
+
+/* Reset / 기본 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 카드 */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* 버튼 */
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn--primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: #0056b3;
+}
+
+.btn--success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn--success:hover {
+  background-color: #218838;
+}
+
+.btn--secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn--secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn--danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn--danger:hover {
+  background-color: #c82333;
+}
+
+/* 폼 요소 */
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* 공통 메시지 */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  margin: 30px 0;
+}
+
+/* Pagination 버튼 공통 */
+.btn--pagination {
+  margin: 0 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+}
+
+.btn--pagination.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}

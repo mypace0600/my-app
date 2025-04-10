@@ -1,5 +1,3 @@
-// src/components/Header.jsx
-
 import { useLocation } from "react-router-dom";
 import HomeButton from "./HomeButton";
 import LogOutButton from "./LogOutButton";
@@ -31,17 +29,48 @@ const CustomHeader = ({
         padding: "10px 20px",
         backgroundColor: "#f5f5f5",
         display: "flex",
-        justifyContent: "space-between",
         alignItems: "center",
+        justifyContent: "space-between",
+        position: "relative",
       }}
     >
-      <div>{!isHome && <HomeButton />}</div>
-
-      <h2 style={{ margin: 0 }}>Wordle Quiz</h2>
-
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        {!isAdmin && <HeartStatus />}
+      {/* 왼쪽 영역 */}
+      <div
+        style={{
+          minWidth: "120px", // 양쪽 고정 너비
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        {!isHome && <HomeButton />}
         {isHome && <LogOutButton />}
+      </div>
+
+      {/* 가운데 타이틀 (absolute 중앙 정렬) */}
+      <h2
+        style={{
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+          margin: 0,
+          whiteSpace: "nowrap",
+        }}
+      >
+        Wordle Quiz
+      </h2>
+
+      {/* 오른쪽 영역 */}
+      <div
+        style={{
+          minWidth: "120px",
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        {!isAdmin && <HeartStatus />}
         {shouldShowCreate && (
           <button className="btn btn-primary" onClick={onCreateClick}>
             {isCreating ? "cancel" : "create"}

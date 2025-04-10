@@ -17,11 +17,11 @@ const HeartStatus = () => {
   console.log(user);
 
   useEffect(() => {
-    setRemainingSeconds(user?.secondsUntilNextHeart || 0);
+    setRemainingSeconds(user.data?.secondsUntilNextHeart || 0);
   }, [user]);
 
   useEffect(() => {
-    if (remainingSeconds <= 0 || (user?.currentHearts ?? 3) >= 3) return;
+    if (remainingSeconds <= 0 || (user.data?.currentHearts ?? 3) >= 3) return;
 
     const interval = setInterval(() => {
       setRemainingSeconds((prev) => {
@@ -40,8 +40,8 @@ const HeartStatus = () => {
 
   return (
     <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-      <span>❤️ {user.currentHearts}/3</span>
-      {user.currentHearts < 3 && (
+      <span>❤️ {user.data.currentHearts}/3</span>
+      {user.data.currentHearts < 3 && (
         <span style={{ fontSize: "0.9em", color: "#888" }}>
           next ❤️ {formatTime(remainingSeconds)}
         </span>
