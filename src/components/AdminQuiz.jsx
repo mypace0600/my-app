@@ -33,9 +33,9 @@ function AdminQuiz() {
     } catch (error) {
       console.error("❌ Error fetching quizzes:", error);
       if (error.response?.status === 401) {
-        alert("관리자 권한이 필요합니다. 로그인 상태를 확인하세요.");
+        alert("need admin authority");
       } else {
-        alert("퀴즈 목록을 불러오는 데 실패했습니다.");
+        alert("fail to load");
       }
     }
     setLoading(false);
@@ -49,7 +49,7 @@ function AdminQuiz() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.answer.length > 10) {
-      alert("정답은 최대 10글자까지 가능합니다.");
+      alert("max length 10 words.");
       return;
     }
     try {
@@ -62,18 +62,18 @@ function AdminQuiz() {
       fetchQuizzes(page, searchKeyword);
     } catch (error) {
       console.error("❌ Error submitting quiz:", error);
-      alert("퀴즈 저장에 실패했습니다.");
+      alert("fali to save.");
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("정말 이 퀴즈를 삭제하시겠습니까?")) {
+    if (window.confirm("are you sure to delete?")) {
       try {
         await deleteQuiz(id);
         fetchQuizzes(page, searchKeyword);
       } catch (error) {
         console.error("❌ Error deleting quiz:", error);
-        alert("퀴즈 삭제에 실패했습니다.");
+        alert("fail to delete.");
       }
     }
   };
@@ -95,7 +95,7 @@ function AdminQuiz() {
           className="btn btn-primary"
           onClick={() => setShowForm(!showForm)}
         >
-          {showForm ? "취소" : "새 퀴즈 생성"}
+          {showForm ? "cancel" : "create"}
         </button>
       </header>
 
@@ -104,7 +104,7 @@ function AdminQuiz() {
           type="text"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
-          placeholder="퀴즈 제목을 검색해보세요"
+          placeholder="search"
         />
         <button
           onClick={() => {
@@ -112,14 +112,14 @@ function AdminQuiz() {
             fetchQuizzes(0, searchKeyword);
           }}
         >
-          검색
+          search
         </button>
       </div>
 
       {showForm && (
         <form className="quiz-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="answer">정답 (ANSWER)</label>
+            <label htmlFor="answer">answer</label>
             <input
               id="answer"
               value={formData.answer}
@@ -128,11 +128,11 @@ function AdminQuiz() {
               }
               required
               maxLength={10}
-              placeholder="정답 단어를 입력하세요 (최대 10글자)"
+              placeholder="answer (max length 10)"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="hint">힌트 (HINT)</label>
+            <label htmlFor="hint">hint</label>
             <textarea
               id="hint"
               value={formData.hint}
@@ -140,27 +140,27 @@ function AdminQuiz() {
                 setFormData({ ...formData, hint: e.target.value })
               }
               required
-              placeholder="힌트를 입력하세요 (예: 과일 이름)"
+              placeholder="hint (ex apple -> iphone)"
               rows="3"
             />
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-success">
-              {editingQuiz ? "수정" : "생성"}
+              {editingQuiz ? "edit" : "create"}
             </button>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={resetForm}
             >
-              취소
+              cancel
             </button>
           </div>
         </form>
       )}
 
       {loading ? (
-        <p className="loading">퀴즈 목록을 불러오는 중...</p>
+        <p className="loading">Loading...</p>
       ) : quizzes.length > 0 ? (
         <div className="quiz-list">
           {quizzes.map((quiz) => (
@@ -176,13 +176,13 @@ function AdminQuiz() {
                     setShowForm(true);
                   }}
                 >
-                  수정
+                  edit
                 </button>
                 <button
                   className="btn btn-delete"
                   onClick={() => handleDelete(quiz.id)}
                 >
-                  삭제
+                  delete
                 </button>
               </div>
             </div>
@@ -190,9 +190,7 @@ function AdminQuiz() {
         </div>
       ) : (
         <p className="no-quizzes">
-          {searchKeyword
-            ? "검색 결과가 없습니다."
-            : "등록된 퀴즈가 없습니다. 새 퀴즈를 생성해보세요!"}
+          {searchKeyword ? "no result" : "not found. create new one!"}
         </p>
       )}
 
@@ -202,7 +200,7 @@ function AdminQuiz() {
           onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
           disabled={page === 0}
         >
-          이전
+          back
         </button>
 
         {Array.from({ length: totalPages }, (_, i) => i)
@@ -235,7 +233,7 @@ function AdminQuiz() {
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
           disabled={page === totalPages - 1}
         >
-          다음
+          next
         </button>
       </div>
     </div>

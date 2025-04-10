@@ -90,7 +90,7 @@ const Quiz = () => {
   return (
     <div className="quiz-container">
       <div>
-        <HomeButton label="홈으로 가기" />
+        <HomeButton label="Home" />
         <h1>Wordle Quiz</h1>
       </div>
       <div className="word-length">{renderWordLength()}</div>
