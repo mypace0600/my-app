@@ -49,7 +49,7 @@ export const getQuizList = async (page = 0, size = 5, keyword = "") => {
       keyword
     )}`
   );
-  return response.data;
+  return response.data.data;
 };
 
 export const createQuiz = (quizData) =>
