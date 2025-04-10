@@ -41,20 +41,26 @@ const Home = () => {
   return (
     <div className="home-container">
       <CustomHeader />
-      <button onClick={handleStartQuiz} className="action-button">
-        Start Quiz
-      </button>
-      <button onClick={() => navigate("/profile")} className="action-button">
-        My Profile
-      </button>
-      {user.data?.isAdmin && (
-        <button
-          onClick={() => navigate("/admin/quiz")}
-          className="action-button"
-        >
-          Admin
+
+      <div className="button-group">
+        <button onClick={handleStartQuiz} className="btn btn--primary">
+          Start Quiz
         </button>
-      )}
+        <button
+          onClick={() => navigate("/leaderboard")}
+          className="btn btn--secondary"
+        >
+          Leaderboard
+        </button>
+        {user.data?.isAdmin && (
+          <button
+            onClick={() => navigate("/admin/quiz")}
+            className="btn btn--success"
+          >
+            Admin
+          </button>
+        )}
+      </div>
     </div>
   );
 };
