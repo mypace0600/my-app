@@ -8,7 +8,7 @@ import {
   deleteQuiz,
 } from "../services/api";
 import "../css/AdminQuiz.css";
-import HomeButton from "./HomeButton";
+import CustomHeader from "./CustomHeader";
 
 function AdminQuiz() {
   const [quizzes, setQuizzes] = useState([]);
@@ -86,18 +86,10 @@ function AdminQuiz() {
 
   return (
     <div className="quiz-container">
-      <header className="quiz-header">
-        <div className="header-left">
-          <HomeButton />
-        </div>
-        <h1>Wordle Quiz Management</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "cancel" : "create"}
-        </button>
-      </header>
+      <CustomHeader
+        onCreateClick={() => setShowForm((prev) => !prev)}
+        isCreating={showForm}
+      />
 
       <div className="search-bar">
         <input

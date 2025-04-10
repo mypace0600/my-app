@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { startQuiz } from "../services/api";
-import LogoutButton from "./LogOutButton";
+import CustomHeader from "./CustomHeader";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -38,8 +38,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <LogoutButton />
-      <h1>Wordle Home</h1>
+      <CustomHeader />
       <button onClick={handleStartQuiz} className="action-button">
         Start Quiz
       </button>

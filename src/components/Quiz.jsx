@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuizDetails, submitAnswer, resetAttempts } from "../services/api";
 import "../css/Quiz.css"; // CSS 추가
-import HomeButton from "./HomeButton";
+import CustomHeader from "./CustomHeader";
 
 const Quiz = () => {
   const { quizId } = useParams();
@@ -89,10 +89,7 @@ const Quiz = () => {
 
   return (
     <div className="quiz-container">
-      <div>
-        <HomeButton label="Home" />
-        <h1>Wordle Quiz</h1>
-      </div>
+      <CustomHeader />
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
       {!isGameOver && attempts.length < maxAttempts && (
