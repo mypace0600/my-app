@@ -10,7 +10,7 @@ import LogoutButton from "./LogOutButton";
 const Home = () => {
   const navigate = useNavigate();
   const { user, fetched } = useAuth();
-
+  console.log(user.data);
   useEffect(() => {
     // fetched가 끝났고 user가 null이면 splash로 보냄
     if (fetched && !user) {
@@ -45,7 +45,7 @@ const Home = () => {
       <button onClick={() => navigate("/profile")} className="action-button">
         My Profile
       </button>
-      {user?.isAdmin && (
+      {user.data?.isAdmin && (
         <button
           onClick={() => navigate("/admin/quiz")}
           className="action-button"

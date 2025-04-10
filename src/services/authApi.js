@@ -10,6 +10,7 @@ export const fetchCurrentUser = async () => {
     if (!res.ok) return null;
 
     const data = await res.json();
+    console.log(data);
     return data; // { email: "...", isAdmin: true, score: 100 }
   } catch (err) {
     console.error("유저 정보 가져오기 실패:", err);

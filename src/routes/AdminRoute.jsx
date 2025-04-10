@@ -7,7 +7,7 @@ const AdminRoute = ({ children }) => {
 
   if (!fetched) return <div>관리자 권한 확인 중...</div>;
 
-  return user?.isAdmin ? children : <Navigate to="/splash" replace />;
+  return user.data?.isAdmin ? children : <Navigate to="/splash" replace />;
 };
 
 export default AdminRoute;
