@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuizDetails, submitAnswer, resetAttempts } from "../services/api";
-import "../Quiz.css"; // CSS 추가
+import "../css/Quiz.css"; // CSS 추가
 
 const Quiz = () => {
   const { quizId } = useParams();

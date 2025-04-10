@@ -7,7 +7,7 @@ import {
   updateQuiz,
   deleteQuiz,
 } from "../services/api";
-import "../AdminQuiz.css";
+import "../css/AdminQuiz.css";
 import { useNavigate } from "react-router-dom";
 
 function AdminQuiz() {

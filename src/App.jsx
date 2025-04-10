@@ -13,7 +13,7 @@ import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
 import Index from "./components/Index";
 import AdminRoute from "./routes/AdminRoute";
-import "./index.css";
+import "./css/Index.css";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
