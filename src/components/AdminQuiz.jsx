@@ -8,12 +8,9 @@ import {
   deleteQuiz,
 } from "../services/api";
 import "../css/AdminQuiz.css";
-import { useNavigate } from "react-router-dom";
+import HomeButton from "./HomeButton";
 
 function AdminQuiz() {
-  // 상단 상태 정의 부분에 추가
-
-  const navigate = useNavigate();
   const [quizzes, setQuizzes] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -91,9 +88,7 @@ function AdminQuiz() {
     <div className="quiz-container">
       <header className="quiz-header">
         <div className="header-left">
-          <button className="btn btn-home" onClick={() => navigate("/home")}>
-            Home
-          </button>
+          <HomeButton />
         </div>
         <h1>Wordle Quiz Management</h1>
         <button
