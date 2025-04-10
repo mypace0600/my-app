@@ -12,7 +12,11 @@ const LogoutButton = () => {
     navigate("/splash", { replace: true });
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button className="btn btn--danger" onClick={handleLogout}>
+      Logout
+    </button>
+  );
 };
 
 export default LogoutButton;
