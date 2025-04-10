@@ -21,8 +21,8 @@ const Home = () => {
       const response = await startQuiz();
 
       console.log(response);
-      if (response.status == 204) {
-        alert(response.data.data.message || "No quizzes available to solve.");
+      if (response.status === 204) {
+        alert("No quizzes available to solve.");
         return;
       }
       navigate(`/quiz/${response.data.data.quizId}`);
