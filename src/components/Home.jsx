@@ -19,15 +19,22 @@ const Home = () => {
   const handleStartQuiz = async () => {
     try {
       const response = await startQuiz();
+
       console.log(response);
-      navigate(`/quiz/${response.quizId}`);
-    } catch (err) {
-      console.error("Start quiz error:", err.response?.data || err);
-      alert("퀴즈 시작 실패");
+      if (response.status == 204) {
+        alert(response.data.data.message || "No quizzes available to solve.");
+        return;
+      }
+      navigate(`/quiz/${response.data.data.quizId}`);
+
+      // 정상 흐름
+    } catch (error) {
+      console.error("Start quiz error:", error);
+      alert("Error! start quiz");
     }
   };
 
-  if (!fetched) return <div>로딩 중...</div>;
+  if (!fetched) return <div>Loading...</div>;
 
   return (
     <div className="home-container">

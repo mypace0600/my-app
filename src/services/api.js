@@ -30,7 +30,7 @@ api.interceptors.response.use(
 
 export const startQuiz = async () => {
   const response = await api.post("/quiz/start");
-  return response.data.data;
+  return response;
 };
 
 export const fetchQuizDetails = async (quizId) => {

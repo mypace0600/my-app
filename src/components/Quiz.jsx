@@ -123,13 +123,13 @@ const Quiz = () => {
                 onClick={() => navigate("/home")}
                 className="modal-button"
               >
-                홈
+                Home
               </button>
               <button
                 onClick={() => navigate(`/quiz/${nextQuizId || quizId}`)}
                 className="modal-button"
               >
-                다음 문제 풀기
+                Next Quiz
               </button>
             </div>
           </div>
