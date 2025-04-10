@@ -13,6 +13,7 @@ import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
 import Index from "./components/Index";
 import AdminRoute from "./routes/AdminRoute";
+import Stat from "./components/Stat";
 import "./css/Index.css";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -31,6 +32,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/stat"
+          element={
+            <ProtectedRoute>
+              <Stat />
             </ProtectedRoute>
           }
         />

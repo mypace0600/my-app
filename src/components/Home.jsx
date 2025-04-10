@@ -47,10 +47,10 @@ const Home = () => {
           Start Quiz
         </button>
         <button
-          onClick={() => navigate("/leaderboard")}
+          onClick={() => navigate("/stat")}
           className="btn btn--secondary"
         >
-          Leaderboard
+          Statistics
         </button>
         {user.data?.isAdmin && (
           <button

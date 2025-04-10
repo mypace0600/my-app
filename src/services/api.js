@@ -28,6 +28,11 @@ api.interceptors.response.use(
   }
 );
 
+export const getStatistics = async () => {
+  const response = await api.post("/user/stat");
+  return response;
+};
+
 export const startQuiz = async () => {
   const response = await api.post("/quiz/start");
   return response;

@@ -1,0 +1,15 @@
+/* /css/stat.css */
+
+.stat-container {
+  margin: 40px auto;
+  max-width: 600px;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-list li {
+  font-size: 18px;
+  margin: 12px 0;
+}
