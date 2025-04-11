@@ -1,6 +1,6 @@
 // /components/HeartStatus.jsx
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 const formatTime = (seconds) => {
@@ -8,7 +8,7 @@ const formatTime = (seconds) => {
   return `${m}`;
 };
 
-const HeartStatus = () => {
+const HeartStatus = memo(() => {
   const { user } = useAuth();
   const [remainingSeconds, setRemainingSeconds] = useState(
     user?.secondsUntilNextHeart || 0
@@ -17,8 +17,9 @@ const HeartStatus = () => {
   console.log(user);
 
   useEffect(() => {
+    if (!user?.data) return;
     setRemainingSeconds(user.data?.secondsUntilNextHeart || 0);
-  }, [user]);
+  }, [user?.data?.secondsUntilNextHeart]);
 
   useEffect(() => {
     if (remainingSeconds <= 0 || (user.data?.currentHearts ?? 3) >= 3) return;
@@ -48,6 +49,6 @@ const HeartStatus = () => {
       )}
     </div>
   );
-};
+});
 
-export default HeartStatus;
+export default memo(HeartStatus);
