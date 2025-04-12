@@ -1,7 +1,6 @@
 // service/api.js
 
 import axios from "axios";
-import { getCookie, setCookie, deleteCookie } from "../utils/cookieUtil";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api",

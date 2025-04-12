@@ -9,7 +9,7 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     await logout(); // ✅ 전역에서 제공하는 logout 함수 호출
-    navigate("/splash", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (

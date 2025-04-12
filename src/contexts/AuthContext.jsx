@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { deleteCookie } from "../utils/cookieUtil";
 import { fetchCurrentUser } from "../services/authApi";
 
 const AuthContext = createContext();
@@ -31,8 +30,6 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Logout API error:", err);
     } finally {
-      deleteCookie("token");
-      deleteCookie("email");
       setUser(null);
     }
   };
