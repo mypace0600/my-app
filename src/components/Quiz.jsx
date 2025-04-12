@@ -1,32 +1,35 @@
 // /components/Quiz.jsx
 
+import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchQuizDetails, submitAnswer, resetAttempts } from "../services/api";
-import "../css/base.css"; // 공통
-import "../css/quiz.css"; // CSS 추가
+import { fetchQuizDetails, submitAnswer } from "../services/api";
+import "../css/base.css";
+import "../css/quiz.css";
 import CustomHeader from "./CustomHeader";
 
 const Quiz = () => {
+  const { fetchUser } = useAuth(); // ✅ AuthContext에서 fetchUser 가져오기
   const { quizId } = useParams();
   const navigate = useNavigate();
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState([]);
-  const [hearts, setHearts] = useState([]);
   const [error, setError] = useState(null);
   const [wordLength, setWordLength] = useState(6);
   const [nextQuizId, setNextQuizId] = useState(null);
   const [showResultModal, setShowResultModal] = useState(false);
   const [showRetryModal, setShowRetryModal] = useState(false);
-  const maxAttempts = 3;
+  const [hearts, setHearts] = useState(null);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await fetchQuizDetails(quizId);
-        console.log("Quiz.jsx: fetchQuizDetails response:", response);
         setWordLength(response.wordLength);
         setNextQuizId(response.nextQuizId);
+        if (response.hearts !== undefined) {
+          setHearts(response.hearts);
+        }
       } catch (err) {
         console.error("Fetch quiz error:", err.response?.data || err);
         setError("Failed to load quiz");
@@ -44,16 +47,18 @@ const Quiz = () => {
 
     try {
       const response = await submitAnswer(quizId, guess);
-      console.log("Quiz.jsx: submitAnswer response:", response);
       setAttempts([...attempts, response]);
-      setHearts([...hearts, response]);
+      setHearts(response.hearts);
       setGuess("");
       setError(null);
 
       if (response.correct) {
         setShowResultModal(true);
-      } else if (attempts.length + 1 === maxAttempts) {
-        setShowRetryModal(true);
+      } else if (!response.correct) {
+        await fetchUser(); // ⚡️ context의 user 갱신
+        if ((attempts.length + 1) % 3 === 0) {
+          setShowRetryModal(true);
+        }
       }
     } catch (err) {
       console.error("Submit error:", err.response?.data || err);
@@ -61,10 +66,9 @@ const Quiz = () => {
     }
   };
 
-  const handleRetry = async () => {
-    await resetAttempts(quizId);
-    setAttempts([]);
+  const handleKeepGoing = () => {
     setShowRetryModal(false);
+    // attempts는 유지, 그냥 모달만 닫고 다음 입력을 허용
   };
 
   const renderWordLength = () =>
@@ -79,23 +83,26 @@ const Quiz = () => {
   const renderAttempts = () =>
     attempts.map((attempt, rowIdx) => (
       <div key={rowIdx} className="row">
-        {attempt.feedback &&
-          attempt.feedback.map((fr, colIdx) => (
-            <div key={colIdx} className={`tile ${fr.status}`}>
-              {fr.letter}
-            </div>
-          ))}
+        {attempt.feedback?.map((fr, colIdx) => (
+          <div key={colIdx} className={`tile ${fr.status}`}>
+            {fr.letter}
+          </div>
+        ))}
       </div>
     ));
 
-  const isGameOver = attempts.some((a) => a.correct);
+  const isGameOver = hearts === 0;
 
   return (
     <div className="quiz-container">
       <CustomHeader />
+      <div className="status-bar">
+        <p>❤️ {hearts !== null ? hearts : "..."}</p>
+      </div>
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
-      {!isGameOver && attempts.length < maxAttempts && (
+
+      {!isGameOver && !attempts.some((a) => a.correct) && (
         <form onSubmit={handleSubmit} className="input-section">
           <input
             type="text"
@@ -111,13 +118,14 @@ const Quiz = () => {
           </button>
         </form>
       )}
+
       {error && <p className="error">{error}</p>}
 
-      {/* 결과 모달 */}
+      {/* 정답 맞춤 */}
       {showResultModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>You Won!</h2>
+            <h2>You Solved It!</h2>
             <div className="modal-buttons">
               <button
                 onClick={() => navigate("/home")}
@@ -136,15 +144,28 @@ const Quiz = () => {
         </div>
       )}
 
-      {/* 재시도 모달 */}
+      {/* 시도 3번 실패 시 */}
       {showRetryModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>시도 횟수 초과</h2>
-            <p>시도 횟수가 초과되었습니다.</p>
-            <button onClick={handleRetry} className="modal-button">
-              확인
-            </button>
+            <h2>Fail to solve</h2>
+            <p>1 heart has been deducted</p>
+            <div className="modal-buttons">
+              <button
+                onClick={() => navigate("/home")}
+                className="modal-button"
+              >
+                Home
+              </button>
+              {hearts > 0 && (
+                <button onClick={handleKeepGoing} className="modal-button">
+                  Keep going?
+                </button>
+              )}
+              <button className="modal-button">
+                Watch Ad to Restore Hearts
+              </button>
+            </div>
           </div>
         </div>
       )}
