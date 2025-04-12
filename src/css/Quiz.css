@@ -4,6 +4,12 @@
   text-align: center;
   padding: 20px;
 }
+.attempts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .modal-overlay {
   position: fixed;
@@ -42,4 +48,15 @@
 
 .modal-button:hover {
   background-color: #45a049;
+}
+
+.CORRECT {
+  background-color: #79b851;
+}
+.MISPLACED {
+  background-color: #f3c237;
+}
+
+.INCORRECT {
+  background-color: #a4aec4;
 }

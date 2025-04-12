@@ -12,6 +12,7 @@ const Quiz = () => {
   const navigate = useNavigate();
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState([]);
+  const [hearts, setHearts] = useState([]);
   const [error, setError] = useState(null);
   const [wordLength, setWordLength] = useState(6);
   const [nextQuizId, setNextQuizId] = useState(null);
@@ -45,6 +46,7 @@ const Quiz = () => {
       const response = await submitAnswer(quizId, guess);
       console.log("Quiz.jsx: submitAnswer response:", response);
       setAttempts([...attempts, response]);
+      setHearts([...hearts, response]);
       setGuess("");
       setError(null);
 
