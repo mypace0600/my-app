@@ -96,9 +96,6 @@ const Quiz = () => {
   return (
     <div className="quiz-container">
       <CustomHeader />
-      <div className="status-bar">
-        <p>❤️ {hearts !== null ? hearts : "..."}</p>
-      </div>
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
 
