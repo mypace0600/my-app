@@ -34,8 +34,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 1분마다 자동으로 fetchUser를 호출하여 하트를 갱신
   useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchUser();
+    }, 60000); // 1분마다 호출
+
+    // 첫 번째 렌더링 시에도 한 번 호출
     fetchUser();
+
+    // 컴포넌트 언마운트 시 인터벌 클리어
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

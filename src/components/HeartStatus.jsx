@@ -14,8 +14,6 @@ const HeartStatus = memo(() => {
     user?.secondsUntilNextHeart || 0
   );
 
-  console.log(user);
-
   useEffect(() => {
     if (!user?.data) return;
     setRemainingSeconds(user.data?.secondsUntilNextHeart || 0);
