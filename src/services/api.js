@@ -56,6 +56,15 @@ export const getQuizList = async (page = 0, size = 5, keyword = "") => {
   return response.data.data;
 };
 
+export const getUserList = async (page = 0, size = 5, keyword = "") => {
+  const response = await api.get(
+    `/admin/user/list?page=${page}&size=${size}&keyword=${encodeURIComponent(
+      keyword
+    )}`
+  );
+  return response.data.data;
+};
+
 export const createQuiz = (quizData) =>
   api.post("/admin/quiz/create", quizData);
 export const updateQuiz = (id, quizData) =>

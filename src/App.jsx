@@ -11,6 +11,7 @@ import Splash from "./components/Splash";
 import Home from "./components/Home";
 import Quiz from "./components/Quiz";
 import AdminQuiz from "./components/AdminQuiz";
+import AdminUser from "./components/AdminUser";
 import Index from "./components/Index";
 import AdminRoute from "./routes/AdminRoute";
 import Stat from "./components/Stat";
@@ -53,6 +54,17 @@ const App = () => {
             </AdminRoute>
           }
         />
+
+        {
+          <Route
+            path="/admin/user"
+            element={
+              <AdminRoute>
+                <AdminUser />
+              </AdminRoute>
+            }
+          />
+        }
 
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>

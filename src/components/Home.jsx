@@ -57,7 +57,15 @@ const Home = () => {
             onClick={() => navigate("/admin/quiz")}
             className="btn btn--success"
           >
-            Admin
+            Admin Quiz
+          </button>
+        )}
+        {user.data?.isAdmin && (
+          <button
+            onClick={() => navigate("/admin/user")}
+            className="btn btn--success"
+          >
+            Admin User
           </button>
         )}
       </div>
