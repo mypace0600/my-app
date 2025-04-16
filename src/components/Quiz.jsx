@@ -9,6 +9,8 @@ import "../css/quiz.css";
 import CustomHeader from "./CustomHeader";
 
 const Quiz = () => {
+  const [showHintModal, setShowHintModal] = useState(false);
+  const [hint, setHint] = useState("");
   const { fetchUser } = useAuth(); // ✅ AuthContext에서 fetchUser 가져오기
   const { quizId } = useParams();
   const navigate = useNavigate();
@@ -25,8 +27,11 @@ const Quiz = () => {
     const fetchQuizData = async () => {
       try {
         const response = await fetchQuizDetails(quizId);
+        console.log(response);
+
         setWordLength(response.wordLength);
         setNextQuizId(response.nextQuizId);
+        setHint(response.hint);
         if (response.hearts !== undefined) {
           setHearts(response.hearts);
         }
@@ -99,6 +104,18 @@ const Quiz = () => {
       <div className="word-length">{renderWordLength()}</div>
       <div className="attempts">{renderAttempts()}</div>
 
+      {!isGameOver && (
+        <div style={{ textAlign: "center", marginBottom: "10px" }}>
+          <button
+            className="hint-button"
+            onClick={() => {
+              setShowHintModal(true);
+            }}
+          >
+            Hint
+          </button>
+        </div>
+      )}
       {!isGameOver && !attempts.some((a) => a.correct) && (
         <form onSubmit={handleSubmit} className="input-section">
           <input
@@ -163,6 +180,20 @@ const Quiz = () => {
                 Watch Ad to Restore Hearts
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {showHintModal && (
+        <div className="modal-overlay">
+          <div className="modal-content small">
+            <h3>Hint ✨</h3>
+            <p>{hint || "Sorry No Hint"}</p>
+            <button
+              onClick={() => setShowHintModal(false)}
+              className="modal-button"
+            >
+              close
+            </button>
           </div>
         </div>
       )}

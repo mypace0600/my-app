@@ -60,3 +60,19 @@
 .INCORRECT {
   background-color: #a4aec4;
 }
+
+.hint-button {
+  background-color: #ffd54f;
+  color: #333;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hint-button:hover {
+  background-color: #ffca28;
+}
