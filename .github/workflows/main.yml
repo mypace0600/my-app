@@ -6,30 +6,52 @@ on:
       - main # main 브랜치에 push되면 배포
 
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22.x"
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build React app
+        run: |
+          npm run build  # 빌드된 파일을 dist 폴더에 저장
+
   deploy_ec2_1:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: deploy # 'deploy' 단계가 끝나야 실행됩니다
+
     steps:
       - name: Save SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
 
-      - name: Upload build to web1
+      - name: Upload build to EC2 instance 1
         run: |
           scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
           ssh -i key.pem ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
 
   deploy_ec2_2:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: deploy # 'deploy' 단계가 끝나야 실행됩니다
+
     steps:
       - name: Save SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
 
-      - name: Upload build to web2
+      - name: Upload build to EC2 instance 2
         run: |
           scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
           ssh -i key.pem ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
