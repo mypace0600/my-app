@@ -46,8 +46,8 @@ jobs:
 
       - name: Upload build to EC2 instance 1
         run: |
-          scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
 
   deploy_ec2_2:
     runs-on: ubuntu-latest
@@ -66,5 +66,5 @@ jobs:
 
       - name: Upload build to EC2 instance 2
         run: |
-          scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
