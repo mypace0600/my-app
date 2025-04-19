@@ -46,7 +46,8 @@ jobs:
 
       - name: Upload build to EC2 instance 1
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+          # dist 디렉토리 내의 파일들만 EC2로 업로드
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist/* ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
           ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
 
   deploy_ec2_2:
@@ -66,5 +67,6 @@ jobs:
 
       - name: Upload build to EC2 instance 2
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+          # dist 디렉토리 내의 파일들만 EC2로 업로드
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./dist/* ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
           ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
