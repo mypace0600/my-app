@@ -1,38 +1,46 @@
-name: Deploy to EC2
-
-on:
-  push:
-    branches: [main]
-
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
+        with: { node-version: "22.x" }
+      - run: npm install
+      - run: npm run build
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
         with:
-          node-version: "22.x"
+          name: dist-files
+          path: dist/
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build React app
-        run: npm run build
-
+  deploy_ec2_1:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
       - name: Save SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
+      - run: scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+      - run: ssh -i key.pem ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
 
-      - name: Deploy to web1
+  deploy_ec2_2:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
+      - name: Save SSH key
         run: |
-          scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
-
-      - name: Deploy to web2
-        run: |
-          scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+      - run: scp -i key.pem -r ./dist ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+      - run: ssh -i key.pem ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
