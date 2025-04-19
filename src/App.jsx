@@ -15,7 +15,7 @@ import AdminUser from "./components/AdminUser";
 import Index from "./components/Index";
 import AdminRoute from "./routes/AdminRoute";
 import Stat from "./components/Stat";
-import "./css/Index.css";
+import "./css/index.css";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
