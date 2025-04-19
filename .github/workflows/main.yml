@@ -3,12 +3,11 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main # main 브랜치에 push되면 배포
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,18 +18,27 @@ jobs:
           node-version: "22.x"
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
       - name: Build React app
-        run: |
-          npm run build  # 빌드된 파일을 dist 폴더에 저장
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist/
 
   deploy_ec2_1:
     runs-on: ubuntu-latest
-    needs: deploy # 'deploy' 단계가 끝나야 실행됩니다
-
+    needs: deploy
     steps:
+      - name: Download dist
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
+
       - name: Save SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
@@ -43,9 +51,14 @@ jobs:
 
   deploy_ec2_2:
     runs-on: ubuntu-latest
-    needs: deploy # 'deploy' 단계가 끝나야 실행됩니다
-
+    needs: deploy
     steps:
+      - name: Download dist
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
+
       - name: Save SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
