@@ -12,7 +12,6 @@ api.interceptors.request.use(
   (config) => {
     console.log("Request URL:", config.url);
     console.log("Request Headers:", config.headers);
-
     return config;
   },
   (error) => Promise.reject(error)
