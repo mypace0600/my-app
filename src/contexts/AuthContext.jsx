@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:8080/api/auth/custom-logout",
+        "http://hyeonsu-alb-1973599510.ap-northeast-2.elb.amazonaws.com/api/auth/custom-logout",
         {},
         { withCredentials: true }
       );
