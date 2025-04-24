@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://hyeonsu-side.com/api",
+  baseURL: "http://hyeonsu-alb-1973599510.ap-northeast-2.elb.amazonaws.com/api",
   headers: { "Content-Type": "application/json" },
   withCredentials: true, // 이거 추가!! ← 핵심
 });
