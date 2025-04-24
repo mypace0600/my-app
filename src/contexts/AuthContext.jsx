@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://hyeonsu-alb-1973599510.ap-northeast-2.elb.amazonaws.com/api/auth/custom-logout",
+        "https://hyeonsu-side.com/api/auth/custom-logout",
         {},
         { withCredentials: true }
       );
