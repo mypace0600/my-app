@@ -7,7 +7,7 @@ const Splash = () => {
 
   const handleGoogleLogin = () => {
     const googleAuthUrl =
-      "http://hyeonsu-alb-1973599510.ap-northeast-2.elb.amazonaws.com/oauth2/authorization/google";
+      "https://api.hyeonsu-side.com/oauth2/authorization/google";
     window.location.href = googleAuthUrl;
   };
 

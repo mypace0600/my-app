@@ -2,13 +2,10 @@
 
 export const fetchCurrentUser = async () => {
   try {
-    const res = await fetch(
-      "http://hyeonsu-alb-1973599510.ap-northeast-2.elb.amazonaws.com/api/auth/me",
-      {
-        method: "GET",
-        credentials: "include", // ✅ 쿠키 포함!
-      }
-    );
+    const res = await fetch("https://api.hyeonsu-side.com/api/auth/me", {
+      method: "GET",
+      credentials: "include", // ✅ 쿠키 포함!
+    });
 
     if (!res.ok) return null;
 
