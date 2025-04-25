@@ -37,7 +37,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-files
-          path: . # ✅ 루트에 받음 (dist/ 그대로 생김)
+          path: dist-files # 📦 dist-files 폴더에 받아짐
 
       - name: Save SSH key
         run: |
@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-files
-          path: . # ✅ 루트에 받음
+          path: dist-files # 📦 dist-files 폴더에 받아짐
 
       - name: Save SSH key
         run: |
