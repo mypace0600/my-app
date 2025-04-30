@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,32 +27,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist-files
-          path: dist/ # ✅ dist 폴더 전체 업로드
+          path: dist/
 
-  deploy_ec2_1:
+  deploy_ec2:
     runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Download dist
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-files
-          path: dist-files # 📦 여기에 dist 내용이 들어감
-
-      - name: Save SSH key
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
-
-      - name: Upload build to EC2 instance 1
-        run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "rm -rf /home/ubuntu/my-app/dist/*"
-          scp -i key.pem -o StrictHostKeyChecking=no -r dist-files/* ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} "sudo systemctl restart nginx"
-
-  deploy_ec2_2:
-    runs-on: ubuntu-latest
-    needs: deploy
+    needs: build
     steps:
       - name: Download dist
         uses: actions/download-artifact@v4
@@ -65,8 +44,14 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
 
-      - name: Upload build to EC2 instance 2
+      - name: Upload build to EC2 instance
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "rm -rf /home/ubuntu/my-app/dist/*"
-          scp -i key.pem -o StrictHostKeyChecking=no -r dist-files/* ubuntu@${{ secrets.EC2_2_PUBLIC_IP }}:/home/ubuntu/my-app/dist
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_2_PUBLIC_IP }} "sudo systemctl restart nginx"
+          # 빈 dist 폴더 정리
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} \
+            "rm -rf /home/ubuntu/my-app/dist/*"
+          # 파일 전송
+          scp -i key.pem -o StrictHostKeyChecking=no -r dist-files/* \
+            ubuntu@${{ secrets.EC2_1_PUBLIC_IP }}:/home/ubuntu/my-app/dist
+          # nginx 재시작
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_1_PUBLIC_IP }} \
+            "sudo systemctl restart nginx"
