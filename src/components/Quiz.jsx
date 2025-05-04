@@ -24,6 +24,15 @@ const Quiz = () => {
   const [hearts, setHearts] = useState(null);
 
   useEffect(() => {
+    // 퀴즈 데이터를 가져오기 전에 관련 상태 초기화
+    setGuess("");
+    setAttempts([]);
+    setError(null);
+    setShowResultModal(false);
+    setShowRetryModal(false);
+  }, [quizId]);
+
+  useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await fetchQuizDetails(quizId);
