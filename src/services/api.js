@@ -69,8 +69,8 @@ export const getUserList = async (page = 0, size = 5, keyword = "") => {
 export const createQuiz = (quizData) =>
   api.post("/admin/quiz/create", quizData);
 export const updateQuiz = (id, quizData) =>
-  api.put(`/admin/quiz/update/${id}`, quizData);
-export const deleteQuiz = (id) => api.delete(`/admin/quiz/delete/${id}`);
+  api.put(`/admin/quiz/${id}`, quizData);
+export const deleteQuiz = (id) => api.delete(`/admin/quiz/${id}`);
 export const resetAttempts = async (quizId) => {
   await api.post(`/quiz/reset/${quizId}`);
 };
