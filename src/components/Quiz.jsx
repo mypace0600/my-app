@@ -36,7 +36,7 @@ const Quiz = () => {
     const fetchQuizData = async () => {
       try {
         const response = await fetchQuizDetails(quizId);
-        console.log(response);
+        console.log("nextQuizId : " + response.nextQuizId);
 
         setWordLength(response.wordLength);
         setNextQuizId(response.nextQuizId);
