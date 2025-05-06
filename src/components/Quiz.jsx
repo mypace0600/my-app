@@ -46,7 +46,16 @@ const Quiz = () => {
         }
       } catch (err) {
         console.error("Fetch quiz error:", err.response?.data || err);
-        setError("Failed to load quiz");
+        const status = err.response?.status;
+        const message = err.response?.data?.message;
+
+        if (status === 409) {
+          alert(message || "이미 푼 퀴즈입니다.");
+          navigate("/home");
+          return;
+        }
+
+        setError("퀴즈 정보를 불러오는 데 실패했습니다.");
       }
     };
     fetchQuizData();
