@@ -156,12 +156,14 @@ const Quiz = () => {
               >
                 Home
               </button>
-              <button
-                onClick={() => navigate(`/quiz/${nextQuizId || quizId}`)}
-                className="modal-button"
-              >
-                Next Quiz
-              </button>
+              {nextQuizId && (
+                <button
+                  onClick={() => navigate(`/quiz/${nextQuizId}`)}
+                  className="modal-button"
+                >
+                  Next Quiz
+                </button>
+              )}
             </div>
           </div>
         </div>
