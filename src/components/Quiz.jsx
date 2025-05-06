@@ -36,7 +36,11 @@ const Quiz = () => {
     const fetchQuizData = async () => {
       try {
         const response = await fetchQuizDetails(quizId);
-        console.log("nextQuizId : " + response.nextQuizId);
+        console.log(
+          "nextQuizId:",
+          response.nextQuizId,
+          typeof response.nextQuizId
+        );
 
         setWordLength(response.wordLength);
         setNextQuizId(response.nextQuizId);
@@ -165,7 +169,7 @@ const Quiz = () => {
               >
                 Home
               </button>
-              {nextQuizId && (
+              {typeof nextQuizId === "number" && (
                 <button
                   onClick={() => navigate(`/quiz/${nextQuizId}`)}
                   className="modal-button"
