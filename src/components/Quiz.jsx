@@ -7,6 +7,7 @@ import { fetchQuizDetails, submitAnswer } from "../services/api";
 import "../css/base.css";
 import "../css/quiz.css";
 import CustomHeader from "./CustomHeader";
+import CustomFooter from "./CustomFooter";
 
 const Quiz = () => {
   const [showHintModal, setShowHintModal] = useState(false);
@@ -221,6 +222,8 @@ const Quiz = () => {
           </div>
         </div>
       )}
+
+      <CustomFooter />
     </div>
   );
 };

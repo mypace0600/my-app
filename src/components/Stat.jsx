@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getStatistics } from "../services/api";
 import CustomHeader from "./CustomHeader";
+import CustomFooter from "./CustomFooter";
 import "../css/base.css";
 import "../css/stat.css";
 
@@ -41,6 +42,8 @@ const Stat = () => {
           🏆 Top <strong>{stats.percentile.toFixed(1)}%</strong> of all users
         </li>
       </ul>
+
+      <CustomFooter />
     </div>
   );
 };

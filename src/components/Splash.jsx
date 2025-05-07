@@ -1,6 +1,7 @@
 // /components/Splash.jsx
 
 import { useNavigate } from "react-router-dom";
+import CustomFooter from "./CustomFooter";
 
 const Splash = () => {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ const Splash = () => {
         <li>매일 새로운 단어 퀴즈 제공</li>
         <li>점수 기반 랭킹 시스템</li>
       </ul>
+
+      <CustomFooter />
     </div>
   );
 };
